@@ -1,2 +1,1 @@
-# bible-translation
-- webscrapping
+# webscrapping
