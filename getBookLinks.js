@@ -9,14 +9,12 @@ const getHref = (parseHtml, html, array) => {
     array.push(book.attribs.href)
   );
 };
-const rawBookUrls = [];
 const eachBook = [
   "#s5_component_wrap_inner > div.item-page > div > div > table > tbody > tr > td > table > tbody > tr > td > a",
   "#s5_component_wrap_inner > div.item-page > div > div > table > tbody > tr > td > a",
   "#s5_component_wrap_inner > div.item-page > div > div > table > tbody > tr > td > p > a",
 ];
-const rawChapterUrls = [];
-const eachChapter = ["body > a"];
+const eachChapter = ["a"];
 
 const getData = (url, parseHtml, getHref) =>
   rp(url)
@@ -29,4 +27,9 @@ const getData = (url, parseHtml, getHref) =>
       console.log("error:", url, "this is printing here", err);
     });
 
-getData(url, eachBook, getHref).then((urls) => console.log(urls.length));
+getData(url, eachBook, getHref).then((urls) => {
+  urls.map(async (bookUri) => {
+    const bookURL = baseURL + bookUri;
+    return await getData(bookURL, eachChapter, getHref).then((a) => a);
+  });
+});
