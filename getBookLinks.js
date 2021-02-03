@@ -1,11 +1,12 @@
 const rp = require("request-promise");
-const $ = require("cheerio");
+const cheerio = require("cheerio");
 const baseURL = "https://www.christunite.com/";
+const biblepath = "pinyin_bible/";
 const url =
   "https://www.christunite.com/index.php/chinese-bible/chinesepinyinbible";
 
 const getHref = (parseHtml, html, array) => {
-  return Array.from($(parseHtml, html)).map((book) =>
+  return Array.from(cheerio(parseHtml, html)).map((book) =>
     array.push(book.attribs.href)
   );
 };
@@ -24,12 +25,37 @@ const getData = (url, parseHtml, getHref) =>
       return Array.from(new Set(rawURLs));
     })
     .catch((err) => {
-      console.log("error:", url, "this is printing here", err);
+      console.log("error:", err);
     });
+let data = [];
+// getData(url, eachBook, getHref).then((urls) => {
+//   return urls.map(async (bookUri) => {
+//     const bookURL = baseURL + bookUri;
+//     return await getData(bookURL, eachChapter, getHref)
+//       .then((chapterUris) => {
+//         return chapterUris.map((chapterURI) => {
+//           const chapterURL = baseURL + biblepath + chapterURI;
+//           return data.push(chapterURL);
+//         });
+//       })
+//       .then(() => data); //all the chapters in the Bible length: 1190
+//   });
+// });
 
-getData(url, eachBook, getHref).then((urls) => {
-  urls.map(async (bookUri) => {
-    const bookURL = baseURL + bookUri;
-    return await getData(bookURL, eachChapter, getHref).then((a) => a);
+const chapterURL = "https://www.christunite.com/pinyin_bible/Psm_117.htm";
+const main = async () => {
+  const result = await rp.get(chapterURL);
+  const $ = cheerio.load(result);
+
+  $("body > table > tbody > tr > td").each((index, element) => {
+    console.log($(element).text().length, "first");
   });
-});
+  const tonation = [];
+  $("body > table > tbody > tr > td > img").each((index, element) => {
+    Array.from($(element)).map((image) =>
+      tonation.push(image.attribs.src.match(/\d/)[0])
+    );
+  });
+  console.log(tonation.length, "second");
+};
+main();
