@@ -9,6 +9,7 @@ const getHref = (parseHtml, html, array) => {
   );
 };
 const eachBook = ["#testament-O > div > a", "#testament-N > div > a"];
+const eachChapter = ["#content-column > div > div > div > div > div > a"];
 
 const getData = (url, parseHtml, getHref) =>
   rp(url)
@@ -21,4 +22,9 @@ const getData = (url, parseHtml, getHref) =>
       console.log("error:", err);
     });
 
-getData(baseURL + bibleVersion, eachBook, getHref).then((data) => data);
+getData(baseURL + bibleVersion, eachBook, getHref).then((allBookURLS) => {
+  const allChapters = allBookURLS.map(async (bookURL) => {
+    return await getData(bookURL, eachChapter, getHref).then((data) => data);
+  });
+  Promise.all(allChapters).then((chapters) => console.log(chapters[0].length)); //Array of books with array of chapters
+});
