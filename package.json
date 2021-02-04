@@ -10,10 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@azure/cosmos": "^3.9.5",
     "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.5",
     "dotenv": "^8.2.0",
-    "mongoose": "^5.11.14",
+    "mongodb": "^3.6.4",
+    "mongoose": "^5.11.15",
     "puppeteer": "^6.0.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.6"
