@@ -6,7 +6,7 @@ const bibleVersion = "cuvs/";
 const Chapter = require("./model");
 const MongoClient = require("mongodb").MongoClient;
 const uri = process.env.COSMODB_CONNECTION_STRING;
-const client = new MongoClient(uri, {
+const client = MongoClient.connect(uri, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
 });
@@ -34,24 +34,14 @@ const getData = (url, parseHtml, getHref) =>
       console.log("error:", err);
     });
 
-// getData(baseURL + bibleVersion, eachBook, getHref).then((allBookURLS) => {
-//   const allChapters = allBookURLS.map(async (bookURL) => {
-//     return await getData(bookURL, eachChapter, getHref).then((allChapterURLS) => {
-//       return await getData(allChapterURLS) // working on this part
-//     });
-//   });
-//   Promise.all(allChapters).then((chapters) => console.log(chapters[0].length)); //Array of books with array of chapters
-// });
-
-const testing = async () => {
-  const mockURL = "https://www.biblestudytools.com/cuvs/shipian/1.html";
-  let a = await rp(mockURL)
+const testing = async (chapterURL) => {
+  let a = await rp(chapterURL)
     .then((html) => {
       const regex = /\/(\w*)\/(\w*)\/(\d*).htm/;
       let bookInfo = {
-        translationCode: mockURL.match(regex)[1],
-        book: mockURL.match(regex)[2],
-        chapter: mockURL.match(regex)[3],
+        translationCode: chapterURL.match(regex)[1],
+        book: chapterURL.match(regex)[2],
+        chapter: chapterURL.match(regex)[3],
       };
       const vNum = cheerio(eachVerse[0], html).text();
       const verseNumbers = vNum.split("");
@@ -68,39 +58,86 @@ const testing = async () => {
         const number = verseNumbers[i];
         numberedVerses[number] = verses[i];
       }
-
-      const chapter = {
-        url: mockURL,
-        TranslationCode: bookInfo.translationCode,
-        BookName: bookInfo.book,
-        BookChapter: bookInfo.chapter,
-        ChineseVerses: JSON.stringify(numberedVerses),
-      };
-      return chapter;
+      return Object.entries(numberedVerses).map((singleVerse) => {
+        const chapter = {
+          [bookInfo.translationCode + "URL"]: chapterURL,
+          TranslationCode: bookInfo.translationCode,
+          BookName: bookInfo.book,
+          BookChapter: bookInfo.chapter,
+          verseNumber: singleVerse[0],
+          ChineseVerse: singleVerse[1],
+        };
+        return chapter;
+      });
     })
     .then((data) => data);
   return a;
 };
 
-const run = async () => {
+const run = async (documentURL) => {
   try {
-    await client.connect();
-    console.log("Connected correctly to server");
-    const db = client.db("chinese-bible");
+    const db = (await client).db("chinese-bible");
     const col = db.collection("chapters");
     const query = {
-      url: "https://www.biblestudytools.com/cuvs/shipian/1.htmml",
+      $or: [{ cuvpURL: documentURL }, { cuvsURL: documentURL }],
     };
-    console.log(await col.findOne(query));
-    await testing().then(async (data) => {
-      await col.insertOne(data);
-      console.log("Done!");
-    });
-    client.close();
-    //process.exit();
+    if ((await col.findOne(query)) === null) {
+      await testing(documentURL).then(async (data) => {
+        return data.map(async (verseData) => {
+          await col.insertOne(verseData);
+          console.log("Done!");
+        });
+      });
+    } else {
+      console.log(await col.findOne(query), "already exists");
+      process.exit();
+    }
+    process.exit();
   } catch (e) {
     console.log(e, "error here");
     process.exit();
   }
 };
-run();
+
+const getAllChapterURLS = async () => {
+  const allBookUrls = [];
+  const allChapterUrls = [];
+  await getData(baseURL + bibleVersion, eachBook, getHref).then(
+    (allBookURLS) => {
+      return allBookUrls.push(allBookURLS);
+    }
+  );
+  const chapURLS = await allBookUrls.flat().map(async (bookURL) => {
+    return await getData(bookURL, eachChapter, getHref);
+  });
+  await Promise.all(chapURLS).then((data) => allChapterUrls.push(data));
+  return allChapterUrls.flat(2);
+};
+
+getAllChapterURLS()
+  .then(async (data) => await run(data[1]))
+  .catch((err) => console.log(err));
+
+const main = async () => {
+  await getData(baseURL + bibleVersion, eachBook, getHref)
+    .then(async (allBookURLS) => {
+      console.log("this 1");
+      await allBookURLS.map(async (bookURL) => {
+        await getData(bookURL, eachChapter, getHref).then(
+          async (allChapterURLS) => {
+            // console.log("ChapterURL");
+            await allChapterURLS.map(async (chapterURL) => {
+              await run(chapterURL);
+              console.log("runnnnn");
+              return "work dammit";
+            });
+            return "popp2";
+          }
+        );
+        return "poop";
+      });
+      return "Success";
+    })
+    .then((data) => console.log(data, "here "))
+    .catch((err) => console.log(err));
+};
