@@ -2,7 +2,7 @@ require("dotenv").config();
 const rp = require("request-promise");
 const cheerio = require("cheerio");
 const baseURL = "https://www.biblestudytools.com/";
-const bibleVersion = "cuvs/";
+const bibleVersion = "cuvp/";
 const MongoClient = require("mongodb").MongoClient;
 const uri = process.env.MONGODB_ATLAS_CONNECTION_STRING;
 const client = new MongoClient.connect(uri, {
@@ -18,7 +18,7 @@ const getHref = (parseHtml, html, array) => {
 const eachBook = ["#testament-O > div > a", "#testament-N > div > a"];
 const eachChapter = ["#content-column > div > div > div > div > div > a"];
 const eachVerse = [
-  "#content-column > div.row.bible-container > div > div > div > div > .verse > .verse-number",
+  "#content-column > div.row.bible-container > div > div > div > div > .verse:last-child > .verse-number > strong",
   "#content-column > div.row.bible-container > div > div > div > div > .verse",
 ];
 
@@ -43,7 +43,8 @@ const testing = async (chapterURL) => {
         chapter: chapterURL.match(regex)[3],
       };
       const vNum = cheerio(eachVerse[0], html).text();
-      const verseNumbers = vNum.split("");
+      const arr = new Array(parseInt(vNum));
+      const verseNumbers = arr.fill(0).map((a, i) => i + 1);
       const rawVerses = [];
       verseNumbers.map((verseNumber) => {
         const verseHtmlPath = `${eachVerse[1]} > .verse-${verseNumber} `;
@@ -64,7 +65,7 @@ const testing = async (chapterURL) => {
           BookName: bookInfo.book,
           BookChapter: bookInfo.chapter,
           verseNumber: singleVerse[0],
-          ChineseVerse: singleVerse[1],
+          pinYinVerse: singleVerse[1],
         };
         return chapter;
       });
@@ -76,15 +77,14 @@ const testing = async (chapterURL) => {
 const run = async (documentURL) => {
   try {
     const db = (await client).db("chinese-bible");
-    const col = db.collection("ch-bible-chapter");
-    const query = {
-      $or: [{ cuvpURL: documentURL }, { cuvsURL: documentURL }],
-    };
+    const col = db.collection("pinyin-ch-bible-chapter");
+    // const query = {
+    //   $or: [{ cuvpURL: documentURL }, { cuvsURL: documentURL }],
+    // };
     // if ((await col.findOne(query)) === null) {
-    return await testing(documentURL).then(async (data) => {
+    return await testing(documentURL).then((data) => {
       return data.map(async (verseData) => {
         await col.insertOne(verseData);
-        console.log("Done!");
       });
     });
     // } else {
@@ -117,7 +117,6 @@ getAllChapterURLS()
     let a;
     console.log(data.length);
     for (let i = 0; i < data.length; i++) {
-      console.log(data[i], "here");
       await run(data[i]);
       a = i;
     }
@@ -125,27 +124,3 @@ getAllChapterURLS()
   })
   .then((data) => console.log(data, "done now!"))
   .catch((err) => console.log(err));
-
-// const main = async () => {
-//   await getData(baseURL + bibleVersion, eachBook, getHref)
-//     .then(async (allBookURLS) => {
-//       console.log("this 1");
-//       await allBookURLS.map(async (bookURL) => {
-//         await getData(bookURL, eachChapter, getHref).then(
-//           async (allChapterURLS) => {
-//             // console.log("ChapterURL");
-//             await allChapterURLS.map(async (chapterURL) => {
-//               await run(chapterURL);
-//               console.log("runnnnn");
-//               return "work dammit";
-//             });
-//             return "popp2";
-//           }
-//         );
-//         return "poop";
-//       });
-//       return "Success";
-//     })
-//     .then((data) => console.log(data, "here "))
-//     .catch((err) => console.log(err));
-// };
