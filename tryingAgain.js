@@ -3,10 +3,9 @@ const rp = require("request-promise");
 const cheerio = require("cheerio");
 const baseURL = "https://www.biblestudytools.com/";
 const bibleVersion = "cuvs/";
-const Chapter = require("./model");
 const MongoClient = require("mongodb").MongoClient;
-const uri = process.env.COSMODB_CONNECTION_STRING;
-const client = MongoClient.connect(uri, {
+const uri = process.env.MONGODB_ATLAS_CONNECTION_STRING;
+const client = new MongoClient.connect(uri, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
 });
@@ -77,22 +76,21 @@ const testing = async (chapterURL) => {
 const run = async (documentURL) => {
   try {
     const db = (await client).db("chinese-bible");
-    const col = db.collection("chapters");
+    const col = db.collection("ch-bible-chapter");
     const query = {
       $or: [{ cuvpURL: documentURL }, { cuvsURL: documentURL }],
     };
-    if ((await col.findOne(query)) === null) {
-      await testing(documentURL).then(async (data) => {
-        return data.map(async (verseData) => {
-          await col.insertOne(verseData);
-          console.log("Done!");
-        });
+    // if ((await col.findOne(query)) === null) {
+    return await testing(documentURL).then(async (data) => {
+      return data.map(async (verseData) => {
+        await col.insertOne(verseData);
+        console.log("Done!");
       });
-    } else {
-      console.log(await col.findOne(query), "already exists");
-      process.exit();
-    }
-    process.exit();
+    });
+    // } else {
+    //   console.log(await col.findOne(query), "already exists");
+    //   return;
+    // }
   } catch (e) {
     console.log(e, "error here");
     process.exit();
@@ -115,29 +113,39 @@ const getAllChapterURLS = async () => {
 };
 
 getAllChapterURLS()
-  .then(async (data) => await run(data[1]))
+  .then(async (data) => {
+    let a;
+    console.log(data.length);
+    for (let i = 0; i < data.length; i++) {
+      console.log(data[i], "here");
+      await run(data[i]);
+      a = i;
+    }
+    return a;
+  })
+  .then((data) => console.log(data, "done now!"))
   .catch((err) => console.log(err));
 
-const main = async () => {
-  await getData(baseURL + bibleVersion, eachBook, getHref)
-    .then(async (allBookURLS) => {
-      console.log("this 1");
-      await allBookURLS.map(async (bookURL) => {
-        await getData(bookURL, eachChapter, getHref).then(
-          async (allChapterURLS) => {
-            // console.log("ChapterURL");
-            await allChapterURLS.map(async (chapterURL) => {
-              await run(chapterURL);
-              console.log("runnnnn");
-              return "work dammit";
-            });
-            return "popp2";
-          }
-        );
-        return "poop";
-      });
-      return "Success";
-    })
-    .then((data) => console.log(data, "here "))
-    .catch((err) => console.log(err));
-};
+// const main = async () => {
+//   await getData(baseURL + bibleVersion, eachBook, getHref)
+//     .then(async (allBookURLS) => {
+//       console.log("this 1");
+//       await allBookURLS.map(async (bookURL) => {
+//         await getData(bookURL, eachChapter, getHref).then(
+//           async (allChapterURLS) => {
+//             // console.log("ChapterURL");
+//             await allChapterURLS.map(async (chapterURL) => {
+//               await run(chapterURL);
+//               console.log("runnnnn");
+//               return "work dammit";
+//             });
+//             return "popp2";
+//           }
+//         );
+//         return "poop";
+//       });
+//       return "Success";
+//     })
+//     .then((data) => console.log(data, "here "))
+//     .catch((err) => console.log(err));
+// };
