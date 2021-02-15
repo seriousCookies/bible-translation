@@ -1,10 +1,12 @@
-require("dotenv").config();
+const express = require("express");
+const router = express.Router();
 const mongodb = require("mongodb");
 const uri = process.env.MONGODB_ATLAS_CONNECTION_STRING;
 
-const connectDb = async () => {
-  let results;
-  await mongodb.MongoClient.connect(
+router.get("/", (req, res) => {
+  const { book, chapter, verse } = req.query;
+  console.log(req.query);
+  mongodb.MongoClient.connect(
     uri,
     {
       useNewUrlParser: true,
@@ -19,28 +21,24 @@ const connectDb = async () => {
       }
       const database = client.db("chinese-bible");
       const collection = database.collection("ch-bible-chapter");
-      const query = {
-        BookName: "chuangshiji",
-        BookChapter: "10",
-        verseNumber: "1",
-      };
+      const query = {};
+      book && (query.BookName = book);
+      chapter && (query.BookChapter = chapter);
+      verse && (query.verseNumber = verse);
+      console.log(query);
       const projection = { ChineseVerse: 1 };
-      return (
-        collection &&
+      collection &&
         collection
           .find(query, projection)
           .sort({ name: 1 })
           .toArray()
-          .then((items) => {
+          .then(async (items) => {
             console.log(`Successfully found ${items.length} documents.`);
-            results = items.forEach((item) => item.ChineseVerse);
+            const results = await items.map((item) => item.ChineseVerse);
+            res.json(results);
           })
-          .catch((err) => console.error(`Failed to find documents: ${err}`))
-      );
+          .catch((err) => console.error(`Failed to find documents: ${err}`));
     }
   );
-  console.log(results, "nothing? now");
-  return results;
-};
-
-module.exports = connectDb;
+});
+module.exports = router;
