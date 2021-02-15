@@ -1,5 +1,0 @@
-COSMOSDB_USER = "<Azure Cosmos account's user name, usually the database account name>"
-COSMOSDB_PASSWORD = "<Azure Cosmos account password, this is one of the keys specified in your account>"
-COSMOSDB_DBNAME = "<Azure Cosmos database name>"
-COSMOSDB_HOST= "<Azure Cosmos Host name>"
-COSMOSDB_PORT=10255
