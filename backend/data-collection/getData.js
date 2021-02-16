@@ -1,8 +1,10 @@
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+
 const rp = require("request-promise");
 const cheerio = require("cheerio");
 const baseURL = "https://www.biblestudytools.com/";
-const bibleVersion = "cuvp/";
+const bibleVersion = "esv/"; //change this to get different versions
 const MongoClient = require("mongodb").MongoClient;
 const uri = process.env.MONGODB_ATLAS_CONNECTION_STRING;
 const client = new MongoClient.connect(uri, {
@@ -36,7 +38,7 @@ const getData = (url, parseHtml, getHref) =>
 const testing = async (chapterURL) => {
   let a = await rp(chapterURL)
     .then((html) => {
-      const regex = /\/(\w*)\/(\w*)\/(\d*).htm/;
+      const regex = /\/(\w*)\/([\d\-\w]*)\/(\d*).htm/;
       let bookInfo = {
         translationCode: chapterURL.match(regex)[1],
         book: chapterURL.match(regex)[2],
@@ -65,7 +67,7 @@ const testing = async (chapterURL) => {
           BookName: bookInfo.book,
           BookChapter: bookInfo.chapter,
           verseNumber: singleVerse[0],
-          pinYinVerse: singleVerse[1],
+          esvVerse: singleVerse[1],
         };
         return chapter;
       });
@@ -76,28 +78,20 @@ const testing = async (chapterURL) => {
 
 const run = async (documentURL) => {
   try {
-    const db = (await client).db("chinese-bible");
-    const col = db.collection("pinyin-ch-bible-chapter");
-    // const query = {
-    //   $or: [{ cuvpURL: documentURL }, { cuvsURL: documentURL }],
-    // };
-    // if ((await col.findOne(query)) === null) {
+    const db = (await client).db("english-bible");
+    const col = db.collection("esv-en-bible-chapter");
     return await testing(documentURL).then((data) => {
       return data.map(async (verseData) => {
         await col.insertOne(verseData);
       });
     });
-    // } else {
-    //   console.log(await col.findOne(query), "already exists");
-    //   return;
-    // }
   } catch (e) {
-    console.log(e, "error here");
+    console.log(documentURL, e, "error here");
     process.exit();
   }
 };
 
-const getAllChapterURLS = async () => {
+const getAllChapterURLS = async (bibleVersion) => {
   const allBookUrls = [];
   const allChapterUrls = [];
   await getData(baseURL + bibleVersion, eachBook, getHref).then(
@@ -112,10 +106,10 @@ const getAllChapterURLS = async () => {
   return allChapterUrls.flat(2);
 };
 
-getAllChapterURLS()
+getAllChapterURLS(bibleVersion)
   .then(async (data) => {
     let a;
-    console.log(data.length);
+    console.log(data.length, "length");
     for (let i = 0; i < data.length; i++) {
       await run(data[i]);
       a = i;
