@@ -8,7 +8,9 @@ const getData = (database, q, verse) =>
     .find(q)
     .toArray()
     .then((items) =>
-      items.map((item) => `${item.verseNumber}.  ${item[verse]}`)
+      items.map(
+        (item) => `${item.verseNumber}.  ${item[verse].replace(/\d/g, "")}`
+      )
     );
 
 router.get("/", (req, res) => {
@@ -27,43 +29,59 @@ router.get("/", (req, res) => {
         console.log(error);
         process.exit(1);
       }
-      const database = client.db("chinese-bible");
-      const chinese = {
-        db: database.collection("ch-bible-chapter"),
-        verse: "ChineseVerse",
-      };
-      const pinYin = {
-        db: database.collection("pinyin-ch-bible-chapter"),
-        verse: "pinYinVerse",
-      };
-
+      let language;
+      const chinese = {};
+      const pinYin = {};
+      const english = {};
+      switch (translation) {
+        case "en":
+          language = "english-bible";
+          english.verse = "esvVerse";
+          break;
+        case "ch":
+          language = "chinese-bible";
+          chinese.verse = "ChineseVerse";
+          pinYin.verse = "pinYinVerse";
+          break;
+        default:
+          language = "chinese-bible";
+          break;
+      }
+      const database = client.db(language);
+      pinYin.dbCollection = database.collection("pinyin-ch-bible-chapter");
+      chinese.dbCollection = database.collection("ch-bible-chapter");
+      english.dbCollection = database.collection("esv-en-bible-chapter");
       const query = {};
       book && (query.BookName = book);
       chapter && (query.BookChapter = chapter);
       verse && (query.verseNumber = verse);
-      const chineseRes =
-        chinese.db && (await getData(chinese.db, query, chinese.verse));
-      const pinYinRes =
-        pinYin.db && (await getData(pinYin.db, query, pinYin.verse));
       let rawData = [];
-      rawData.push(pinYinRes);
-      rawData.push(chineseRes);
-      const data = rawData
+
+      switch (translation) {
+        case "en":
+          const esvRes =
+            english.dbCollection &&
+            (await getData(english.dbCollection, query, english.verse));
+          rawData.push(esvRes);
+          break;
+
+        case "ch":
+          const chineseRes =
+            chinese.dbCollection &&
+            (await getData(chinese.dbCollection, query, chinese.verse));
+          const pinYinRes =
+            pinYin.dbCollection &&
+            (await getData(pinYin.dbCollection, query, pinYin.verse));
+          rawData.push(pinYinRes);
+          rawData.push(chineseRes);
+          break;
+        default:
+          break;
+      }
+      const data = await rawData
         .flat()
         .sort((a, b) => a.split(" ")[0] - b.split(" ")[0]);
       res.json(data);
-      // chineseDB &&
-      //   chineseDB
-      //     .find(query)
-      //     .toArray()
-      //     .then(async (items) => {
-      //       console.log(`Successfully found ${items.length} documents.`);
-      //       const chineseResults = await items
-      //         .sort((a, b) => a.verseNumber - b.verseNumber)
-      //         .map((item) => `${item.verseNumber}.  ${item.ChineseVerse}`);
-      //       res.json(chineseResults);
-      //     })
-      //     .catch((err) => console.error(`Failed to find documents: ${err}`));
     }
   );
 });
