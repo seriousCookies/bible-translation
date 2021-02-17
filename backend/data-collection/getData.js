@@ -4,7 +4,7 @@ require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 const rp = require("request-promise");
 const cheerio = require("cheerio");
 const baseURL = "https://www.biblestudytools.com/";
-const bibleVersion = "esv/"; //change this to get different versions
+const bibleVersion = "cuvs/"; //change this to get different versions
 const MongoClient = require("mongodb").MongoClient;
 const uri = process.env.MONGODB_ATLAS_CONNECTION_STRING;
 const client = new MongoClient.connect(uri, {
@@ -78,8 +78,8 @@ const testing = async (chapterURL) => {
 
 const run = async (documentURL) => {
   try {
-    const db = (await client).db("english-bible");
-    const col = db.collection("esv-en-bible-chapter");
+    const db = (await client).db("testing-bible");
+    const col = db.collection("ch-en-bible-chapter");
     return await testing(documentURL).then((data) => {
       return data.map(async (verseData) => {
         await col.insertOne(verseData);
