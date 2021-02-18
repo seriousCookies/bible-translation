@@ -6,7 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BibleBooksComponent } from './components/bible-books/bible-books.component';
-
+import {FetchdataService} from "./service/fetchdata.service"
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,7 +18,7 @@ import { BibleBooksComponent } from './components/bible-books/bible-books.compon
     AppRoutingModule,
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [FetchdataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

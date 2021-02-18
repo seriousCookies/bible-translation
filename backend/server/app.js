@@ -2,16 +2,16 @@ require("dotenv").config();
 const bodyParser = require("body-parser");
 const searchAPI = require("./searchRoute");
 const bookAPI = require("./bookListRoute");
-require("dotenv").config();
+const cors = require("cors");
 
 const express = require("express");
 const app = express();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3001;
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use("/api/search", searchAPI);
 app.use("/api/booklist", bookAPI);
-app.get("/", async (req, res) => {});
 
 module.exports.app = app;
 if (!module.parent) {

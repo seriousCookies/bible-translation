@@ -2,10 +2,9 @@
 <header>
   <h1>Chinese Bible</h1>
 </header>
-
-  <div class="item" *ngFor="let post of posts">
+  <div class="item" *ngFor="let book of books$| async">
     <div class="item-body">
-      {{post}}
+      {{book.chinese}}-{{book.english}} 
     </div>
 
 </div>
