@@ -17,15 +17,33 @@ router.get("/", (req, res) => {
         console.log(error);
         process.exit(1);
       }
-      const chineseBookName = await client
-        .db("chinese-bible")
-        .collection("ch-bible-chapter")
-        .distinct("BookName");
-      const englishBookName = await client
-        .db("english-bible")
-        .collection("esv-en-bible-chapter")
-        .distinct("BookName");
-      res.json(chineseBookName + englishBookName);
+      const list = [];
+      const database = client.db("bible");
+      const collection = database.collection("bibleInfo");
+      const query = { overallOrder: { $gt: 0 } };
+      const options = {
+        sort: { overallOrder: 1 },
+        projection: {
+          _id: 0,
+          overallOrder: 1,
+          pinyin: 1,
+          chinese: 1,
+          english: 1,
+          testament: 1,
+        },
+      };
+      const cursor = collection.find(query, options);
+      if ((await cursor.count()) === 0) {
+        res.json("No documents found!");
+      }
+      await cursor.forEach((i) => {
+        collection.updateOne(
+          { english: i.english },
+          { $set: { overallOrder: parseInt(i.overallOrder) } }
+        );
+        list.push(i);
+      });
+      res.json(list);
     }
   );
 });

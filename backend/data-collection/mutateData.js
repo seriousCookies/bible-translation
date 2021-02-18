@@ -3,6 +3,14 @@ const $ = require("cheerio");
 const fs = require("fs");
 const readline = require("readline");
 const baseURL = "https://www.christunite.com/";
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+const MongoClient = require("mongodb").MongoClient;
+const uri = process.env.MONGODB_ATLAS_CONNECTION_STRING;
+const client = new MongoClient.connect(uri, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+});
 
 const rl = readline.createInterface({
   input: fs.createReadStream("./ot.txt"),
@@ -15,7 +23,7 @@ const NTrl = readline.createInterface({
 
 const bookOrder = [];
 rl.on("line", (line) => {
-  const lineRegex = /^(?<overallOrder>[\d.]*)\s(?<english>[\w ]*)/gim;
+  const lineRegex = /^(?<overallOrder>[\d]*).\s(?<english>[\w ]*)/gim;
   let bookoverallOrder = lineRegex.exec(line);
   bookOrder.push(JSON.parse(JSON.stringify(bookoverallOrder.groups)));
 });
@@ -53,7 +61,7 @@ const getData = (url, parseHtml, getHref) =>
       console.log("error:", url, "this is printing here", err);
     });
 
-getData(url, eachBook, getHref).then((data) => {
+getData(url, eachBook, getHref).then(async (data) => {
   const books = [];
   const regex = /[\n]?(?<code>\w*\*?)\s(?<ch>[\u4E00-\u9FCC]*)\s\((?<py>[\w]*)\)\s(?<en>[\w ]*)/gim;
   data = data
@@ -67,14 +75,15 @@ getData(url, eachBook, getHref).then((data) => {
         const splitBookString = bookString.split(",");
         const bookDetails = {
           code: splitBookString[0].replace(/\*/gi, ""),
-          chinese: splitBookString[1],
-          pinyin: splitBookString[2] && splitBookString[2].replace(/\d/gi, ""),
+          chinese: splitBookString[1].trim(),
+          pinyin:
+            splitBookString[2] && splitBookString[2].replace(/\d/gi, "").trim(),
           english: splitBookString[3].trim(),
         };
         return books.push(bookDetails);
       }
     });
-  let a = books.map((book) => {
+  let bbInfo = books.map((book) => {
     let bibleBooks = {
       ...book,
       ...bookOrder.filter((line) => line.english === book.english)[0],
@@ -85,28 +94,13 @@ getData(url, eachBook, getHref).then((data) => {
       : (bibleBooks.testament = "NewTestament");
     return bibleBooks;
   });
-
-  console.log(a, "here now");
-});
-
-const MongoClient = require("mongodb").MongoClient;
-const uri = process.env.MONGODB_ATLAS_CONNECTION_STRING;
-const client = new MongoClient.connect(uri, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-});
-
-const updateDocument = async (documentURL) => {
   try {
-    const db = (await client).db("testing-bible");
-    const col = db.collection("ch-en-bible-chapter");
-    return await testing(documentURL).then((data) => {
-      return data.map(async (verseData) => {
-        await col.insertOne(verseData);
-      });
-    });
+    const db = (await client).db("bible");
+    const bibleBookInfo = (await db).collection("bibleInfo");
+    bibleBookInfo.insert(bbInfo);
+    console.log("done!");
   } catch (e) {
-    console.log(documentURL, e, "error here");
+    console.log(e, "error here");
     process.exit();
   }
-};
+});
