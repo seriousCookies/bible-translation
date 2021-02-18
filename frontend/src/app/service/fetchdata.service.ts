@@ -7,12 +7,11 @@ import { Observable } from 'rxjs';
 })
 export class FetchdataService {
 
-  private REST_API_SERVER="http://localhost:3001/api/booklist"
+  private REST_API_SERVER="http://localhost:3001/api/"
 
   constructor(private http: HttpClient) { }
-      public sendGetRequest():Observable<Object> {
-        console.log("this logs right?",this.http.get(this.REST_API_SERVER))
-        return this.http.get(this.REST_API_SERVER);
+      public sendGetRequest(path:string):Observable<Object> {
+        return this.http.get(this.REST_API_SERVER+path);
     }
 
 }

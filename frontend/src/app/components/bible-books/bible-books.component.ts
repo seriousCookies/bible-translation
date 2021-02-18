@@ -12,7 +12,7 @@ export class BibleBooksComponent implements OnInit {
   constructor(private FetchdataService: FetchdataService) {}
 
   ngOnInit(){
-   this.books$=this.FetchdataService.sendGetRequest()
+   this.books$=this.FetchdataService.sendGetRequest('booklist')
   }
 
 }

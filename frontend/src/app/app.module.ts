@@ -11,10 +11,12 @@ import {FetchdataService} from "./service/fetchdata.service"
 import {MatSidenavModule} from '@angular/material/sidenav'
 import {MatButtonModule} from '@angular/material/button'
 import {MatIconModule} from '@angular/material/icon';
+import { BookChaptersComponent } from './components/book-chapters/book-chapters.component';
 @NgModule({
   declarations: [
     AppComponent,
-    BibleBooksComponent
+    BibleBooksComponent,
+    BookChaptersComponent
   ],
   imports: [
     BrowserModule,

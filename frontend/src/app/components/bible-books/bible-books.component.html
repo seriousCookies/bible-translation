@@ -1,5 +1,5 @@
 <mat-sidenav-container class="tp-container">
-  <mat-sidenav #sidenav mode="side" [fixedInViewport]="true">
+  <mat-sidenav #sidenav mode="push" [fixedInViewport]="true">
     <h1>Old Testament</h1>
     <div class="item" *ngFor="let book of books$| async">
       <section class = "tp-section">
