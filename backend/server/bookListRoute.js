@@ -22,18 +22,22 @@ router.get("/", (req, res) => {
       const collection = database.collection("bibleInfo");
       const query = { overallOrder: { $gt: 0 } };
       const options = {
-        // sort returned documents in ascending order by title (A->Z)
         sort: { overallOrder: 1 },
-        // Include only the `title` and `imdb` fields in each returned document
-        projection: { _id: 0, overallOrder: 1, chinese: 1, english: 1 },
+        projection: {
+          _id: 0,
+          overallOrder: 1,
+          pinyin: 1,
+          chinese: 1,
+          english: 1,
+          testament: 1,
+        },
       };
       const cursor = collection.find(query, options);
       if ((await cursor.count()) === 0) {
         res.json("No documents found!");
       }
-      // replace console.dir with your callback to access individual elements
       await cursor.forEach((i) => {
-        collection.update(
+        collection.updateOne(
           { english: i.english },
           { $set: { overallOrder: parseInt(i.overallOrder) } }
         );
