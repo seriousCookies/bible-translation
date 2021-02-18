@@ -1,10 +1,9 @@
 <div class="app">
 <header>
-  <h1>Chinese Bible</h1>
-</header>
-  <div class="item" *ngFor="let book of books$| async">
-    <div class="item-body">
-      {{book.chinese}}-{{book.english}} 
-    </div>
+  <h1> Bible</h1>
 
+</header>
+<body>
+  <app-bible-books></app-bible-books>
+</body>
 </div>
