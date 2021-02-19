@@ -1,8 +1,7 @@
+const { raw } = require("body-parser");
 const express = require("express");
 const router = express.Router();
-const mongodb = require("mongodb");
-const uri = process.env.MONGODB_ATLAS_CONNECTION_STRING;
-
+const MongoDB = require("../db/mongodb");
 const getData = (database, q, verse) =>
   database
     .find(q)
@@ -15,74 +14,46 @@ const getData = (database, q, verse) =>
 
 router.get("/", (req, res) => {
   const { translation, book, chapter, verse } = req.query;
-  console.log(req.query);
-  mongodb.MongoClient.connect(
-    uri,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-      useFindAndModify: false,
-    },
-    async (error, client) => {
-      if (error) {
-        console.log(error);
-        process.exit(1);
-      }
-      let language;
-      const chinese = {};
-      const pinYin = {};
-      const english = {};
-      switch (translation) {
-        case "en":
-          language = "english-bible";
-          english.verse = "esvVerse";
-          break;
-        case "ch":
-          language = "chinese-bible";
-          chinese.verse = "ChineseVerse";
-          pinYin.verse = "pinYinVerse";
-          break;
-        default:
-          language = "chinese-bible";
-          break;
-      }
-      const database = client.db(language);
-      pinYin.dbCollection = database.collection("pinyin-ch-bible-chapter");
-      chinese.dbCollection = database.collection("ch-bible-chapter");
-      english.dbCollection = database.collection("esv-en-bible-chapter");
-      const query = {};
-      book && (query.BookName = book);
-      chapter && (query.BookChapter = chapter);
-      verse && (query.verseNumber = verse);
-      let rawData = [];
+  const query = {};
+  book && (query.BookName = book);
+  chapter && (query.BookChapter = chapter);
+  verse && (query.verseNumber = verse);
+  const rawData = [];
+  const collection = {};
+  MongoDB.connectDB(async (err) => {
+    if (err) console.log(err);
+    const db = MongoDB.getDB();
+    switch (translation) {
+      case "en":
+        collection.english = db.collection("esv-en-bible-chapter");
+        const esvRes = await getData(collection.english, query, "esvVerse");
+        rawData.push(esvRes);
+        break;
+      case "ch":
+        collection.chinese = await db.collection("ch-bible-chapter");
+        collection.pinyin = await db.collection("pinyin-ch-bible-chapter");
+        const pinYinRes = await getData(
+          collection.pinyin,
+          query,
+          "pinYinVerse"
+        );
+        rawData.push(pinYinRes);
+        const chineseRes = await getData(
+          collection.chinese,
+          query,
+          "ChineseVerse"
+        );
+        rawData.push(chineseRes);
 
-      switch (translation) {
-        case "en":
-          const esvRes =
-            english.dbCollection &&
-            (await getData(english.dbCollection, query, english.verse));
-          rawData.push(esvRes);
-          break;
-
-        case "ch":
-          const chineseRes =
-            chinese.dbCollection &&
-            (await getData(chinese.dbCollection, query, chinese.verse));
-          const pinYinRes =
-            pinYin.dbCollection &&
-            (await getData(pinYin.dbCollection, query, pinYin.verse));
-          rawData.push(pinYinRes);
-          rawData.push(chineseRes);
-          break;
-        default:
-          break;
-      }
-      const data = await rawData
-        .flat()
-        .sort((a, b) => a.split(" ")[0] - b.split(" ")[0]);
-      res.json(data);
+        break;
+      default:
+        rawData.push("choose a translation");
+        break;
     }
-  );
+    const data = await rawData
+      .flat()
+      .sort((a, b) => a.split(" ")[0] - b.split(" ")[0]);
+    res.json(data);
+  });
 });
 module.exports = router;

@@ -1,7 +1,10 @@
+require("dotenv").config();
 const server = require("./server/app.js").app;
-
+const db = require("./db/mongodb");
 port = process.env.PORT || 3001;
 
-server.listen(port, () =>
-  console.log(`💖 Server ready at http://localhost:3001/`)
-);
+db.connectDB(() => {
+  server.listen(port, () =>
+    console.log(`💖 Server ready at http://localhost:3001/`)
+  );
+});

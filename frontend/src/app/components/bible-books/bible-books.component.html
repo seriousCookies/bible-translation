@@ -1,7 +1,19 @@
-<div class="bible-books">
-  <div class="bible-book">
-    <div class="id">Book-number</div>
-    <div class="title">Book-title</div>
-  </div>
-
-</div>
+<mat-sidenav-container class="tp-container">
+  <mat-sidenav #sidenav mode="push" [fixedInViewport]="true">
+    <h1>Old Testament</h1>
+    <div class="item" *ngFor="let book of books$| async">
+      <section class = "tp-section">
+        <div *ngIf="book.testament ==='OldTestament'"><span>{{book.chinese}}-{{book.english}} </span></div>
+     </section>
+    </div>
+    <h1>New Testament</h1>
+    <div class="item" *ngFor="let book of books$| async">
+      <section class = "tp-section">
+        <div *ngIf="book.testament ==='NewTestament'"><span>{{book.chinese}}-{{book.english}} </span></div>
+     </section>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <button mat-icon-button color="primary" (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
+  </mat-sidenav-content>
+</mat-sidenav-container>
