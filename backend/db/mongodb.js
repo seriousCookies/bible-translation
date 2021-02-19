@@ -5,10 +5,17 @@ const dbName = process.env.DB_NAME;
 
 const connectDB = async (callback) => {
   try {
-    MongoClient.connect(mongo_url, (err, client) => {
-      _db = client.db(dbName);
-      return callback(err);
-    });
+    MongoClient.connect(
+      mongo_url,
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      },
+      (err, client) => {
+        _db = client.db(dbName);
+        return callback(err);
+      }
+    );
   } catch (e) {
     throw e;
   }
