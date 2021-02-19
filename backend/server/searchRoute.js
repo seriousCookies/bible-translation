@@ -53,7 +53,7 @@ router.get("/", (req, res) => {
     const data = await rawData
       .flat()
       .sort((a, b) => a.split(" ")[0] - b.split(" ")[0]);
-    res.json(data);
+    return res.status(200).json(data);
   });
 });
 module.exports = router;
