@@ -10,6 +10,7 @@ import {FetchdataService} from "./service/fetchdata.service"
 
 import {MatSidenavModule} from '@angular/material/sidenav'
 import {MatButtonModule} from '@angular/material/button'
+import {MatExpansionModule} from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon';
 import { BookChaptersComponent } from './components/book-chapters/book-chapters.component';
 @NgModule({
@@ -22,6 +23,7 @@ import { BookChaptersComponent } from './components/book-chapters/book-chapters.
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
+    MatExpansionModule,
     BrowserAnimationsModule,
     MatSidenavModule,
     MatButtonModule,

@@ -1,29 +1,37 @@
 <mat-sidenav-container class="tp-container">
   <mat-sidenav #sidenav mode="push" [fixedInViewport]="true">
     <h1>Old Testament</h1>
+    <mat-accordion>
     <div class="item" *ngFor="let book of books$ | async" (click)="open($event, book)">
-      <section class = "tp-section">
-        <div *ngIf="book.testament ==='OldTestament'"><button mat-button id={{book.english}}>{{book.chinese}}-{{book.english}} </button>
-        <div *ngIf="book.isCollapsed">
-          <app-book-chapters
-          [bookName]="book.english"
-          ></app-book-chapters>
-          HelloThere</div>
-      </div>
-     </section>
-    </div>
-    <h1>New Testament</h1>
-    <div class="item" *ngFor="let book of books$| async" (click)="open($event, book)">
-      <section class = "tp-section">
-        <div *ngIf="book.testament ==='NewTestament'"><button mat-button id={{book.english}}>{{book.chinese}}-{{book.english}} </button>
-          <div *ngIf="book.isCollapsed">
+      <div *ngIf="book.testament ==='OldTestament'">
+        <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{book.chinese}}-{{book.english}}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
             <app-book-chapters
-            [bookName]="book.english"
-            ></app-book-chapters>
-            working?</div>
-       </div>
-     </section>
-    </div>
+                [bookName]="book.english"
+                ></app-book-chapters>
+          </mat-expansion-panel>
+      </div>  
+             </div>
+      <h1>New Testament</h1>
+      <div class="item" *ngFor="let book of books$| async" (click)="open($event, book)">
+        <div *ngIf="book.testament ==='NewTestament'">
+          <mat-expansion-panel hideToggle>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{book.chinese}}-{{book.english}}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <app-book-chapters
+                  [bookName]="book.english"
+                  ></app-book-chapters>
+            </mat-expansion-panel>
+        </div>  
+        </div>
+      </mat-accordion>
   </mat-sidenav>
   <mat-sidenav-content>
     <button mat-icon-button color="primary" (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
