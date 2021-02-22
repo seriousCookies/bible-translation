@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FetchdataService } from '../../service/fetchdata.service';
 
 
@@ -8,12 +8,21 @@ import { FetchdataService } from '../../service/fetchdata.service';
   styleUrls: ['./book-chapters.component.scss']
 })
 export class BookChaptersComponent implements OnInit {
+  @Input() bookName?:string;
+  chapterList?: Array<number>;
   data$: any;
   
   constructor(private FetchdataService: FetchdataService) {}
 
-  ngOnInit(){
-   this.data$=this.FetchdataService.sendGetRequest('search/?book=shipian&chapter=1&translation=ch')
-   console.log(Object.keys(this.data$), "here now")
+   ngOnInit(){
+    let book= this.bookName?.toLocaleLowerCase().replace(/\s/, "-");
+   this.FetchdataService.sendGetRequest(`booklist/?book=${book}`).subscribe(data=>{
+    this.data$ = Object.values(data)
+    this.chapterList= [...Array(this.data$[0]).keys()].map(x => ++x)
+    console.log(this.bookName, this.data$, this.chapterList)
+     
+   })
+
+   
   }
 }
