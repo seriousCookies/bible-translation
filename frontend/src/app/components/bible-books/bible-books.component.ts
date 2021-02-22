@@ -1,6 +1,14 @@
-import { Directive, HostListener, Component, OnInit } from '@angular/core';
+import {  Component, OnInit } from '@angular/core';
 import { FetchdataService } from '../../service/fetchdata.service';
 
+interface Book {
+  chinese: string;
+  pinyin: string;
+  english: string;
+  overallOrder: string;
+  testament: string;
+  isCollapsed: boolean;
+};
 
 @Component({
   selector: 'app-bible-books',
@@ -9,18 +17,16 @@ import { FetchdataService } from '../../service/fetchdata.service';
 })
 
 export class BibleBooksComponent implements OnInit {
-  books$: any;
+  public books$: any;
   isCollapsed: boolean= true;
+
 
   constructor(private FetchdataService: FetchdataService) {}
 
-  @HostListener('click', ['$event.target.id']) onClick(bookID: string) {
-    console.log(`You clicked on ${bookID}`);
-  } 
   ngOnInit(){
    this.books$=this.FetchdataService.sendGetRequest('booklist')
-
-
   }
-
+  public open(event:MouseEvent, book:Book) {
+    book.isCollapsed=!book.isCollapsed;
+  }
 }

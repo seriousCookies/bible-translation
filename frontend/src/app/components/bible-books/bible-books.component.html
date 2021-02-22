@@ -1,10 +1,10 @@
 <mat-sidenav-container class="tp-container">
   <mat-sidenav #sidenav mode="push" [fixedInViewport]="true">
     <h1>Old Testament</h1>
-    <div class="item" *ngFor="let book of books$| async">
+    <div class="item" *ngFor="let book of books$ | async" (click)="open($event, book)">
       <section class = "tp-section">
         <div *ngIf="book.testament ==='OldTestament'"><button mat-button id={{book.english}}>{{book.chinese}}-{{book.english}} </button>
-        <div *ngIf="!isCollapsed">HelloThere</div>
+        <div *ngIf="book.isCollapsed">HelloThere</div>
       </div>
      </section>
     </div>
