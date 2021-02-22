@@ -3,13 +3,15 @@
     <h1>Old Testament</h1>
     <div class="item" *ngFor="let book of books$| async">
       <section class = "tp-section">
-        <div *ngIf="book.testament ==='OldTestament'"><span>{{book.chinese}}-{{book.english}} </span></div>
+        <div *ngIf="book.testament ==='OldTestament'"><button mat-button id={{book.english}}>{{book.chinese}}-{{book.english}} </button>
+        <div *ngIf="!isCollapsed">HelloThere</div>
+      </div>
      </section>
     </div>
     <h1>New Testament</h1>
     <div class="item" *ngFor="let book of books$| async">
       <section class = "tp-section">
-        <div *ngIf="book.testament ==='NewTestament'"><span>{{book.chinese}}-{{book.english}} </span></div>
+        <div *ngIf="book.testament ==='NewTestament'"><button mat-button id={{book.english}}>{{book.chinese}}-{{book.english}} </button></div>
      </section>
     </div>
   </mat-sidenav>

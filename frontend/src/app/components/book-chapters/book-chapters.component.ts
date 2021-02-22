@@ -13,7 +13,9 @@ export class BookChaptersComponent implements OnInit {
   constructor(private FetchdataService: FetchdataService) {}
 
   ngOnInit(){
-   this.data$=this.FetchdataService.sendGetRequest('search/?book=shipian&chapter=1&translation=ch')
-   console.log(Object.keys(this.data$), "here now")
+   this.FetchdataService.sendGetRequest('booklist/?book=psalm').subscribe(data=>{
+     this.data$ = data;
+   })
+   
   }
 }
