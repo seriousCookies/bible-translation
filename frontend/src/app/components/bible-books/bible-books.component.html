@@ -2,7 +2,7 @@
   <mat-sidenav #sidenav mode="push" [fixedInViewport]="true">
     <h1>Old Testament</h1>
     <mat-accordion>
-    <div class="item" *ngFor="let book of books$ | async">
+    <div class="item" *ngFor="let book of books$">
       <div *ngIf="book.testament ==='OldTestament'">
         <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header>
@@ -17,7 +17,7 @@
       </div>  
              </div>
       <h1>New Testament</h1>
-      <div class="item" *ngFor="let book of books$| async">
+      <div class="item" *ngFor="let book of books$">
         <div *ngIf="book.testament ==='NewTestament'">
           <mat-expansion-panel hideToggle>
               <mat-expansion-panel-header>

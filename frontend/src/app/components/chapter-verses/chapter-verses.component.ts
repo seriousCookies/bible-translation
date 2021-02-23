@@ -2,8 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FetchdataService } from '../../service/fetchdata.service';
 
 interface BookDets {
-  bookName: string,
-  chapter: number,
+  bookName: String,
+  chapter: Number,
 }
 
 @Component({
@@ -13,14 +13,14 @@ interface BookDets {
 })
 export class ChapterVersesComponent implements OnInit {
   @Input() bookDetails?:BookDets;
-
+  searchString?:string
+  verseList?:Array<object>
   constructor(private FetchdataService: FetchdataService) { }
 
   ngOnInit(): void{
-  //   const {bookName, chapter}= this.bookDetails
-  //  this.FetchdataService.sendGetRequest(`search/?book=${bookName}&chapter=${chapter}&translation=en`).subscribe(data=>{
-  //   console.log(this.bookDetails, data)
-  
-  // })
+    this.searchString= `search/?book=${this.bookDetails?.bookName}&chapter=${this.bookDetails?.chapter}&translation=en`
+     this.FetchdataService.sendGetRequest(this.searchString).subscribe(data=>{
+       this.verseList=data;
+    })
 }
 }

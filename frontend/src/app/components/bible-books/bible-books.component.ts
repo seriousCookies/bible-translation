@@ -9,13 +9,14 @@ import { FetchdataService } from '../../service/fetchdata.service';
 })
 
 export class BibleBooksComponent implements OnInit {
-  public books$?: object;
+  public books$?: any;
 
 
   constructor(private FetchdataService: FetchdataService) {}
 
   ngOnInit(){
-   this.books$=this.FetchdataService.sendGetRequest('booklist')
+   this.FetchdataService.sendGetRequest('booklist').subscribe(data=>
+    this.books$=data)
   }
 
 }
