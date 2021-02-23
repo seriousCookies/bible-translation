@@ -4,12 +4,13 @@ const MongoDB = require("../db/mongodb");
 
 router.get("/", (req, res, next) => {
   const { book, chapter } = req.query;
-  try {
-    MongoDB.connectDB(async (err) => {
-      if (err) console.log(err);
-      const db = MongoDB.getDB();
-      const list = [];
-      const collection = {};
+
+  MongoDB.connectDB(async (err) => {
+    if (err) console.log(err);
+    const db = MongoDB.getDB();
+    const list = [];
+    const collection = {};
+    try {
       collection.bibleInfo = db.collection("bibleInfo");
       const bookInfo = {};
       if (book) {
@@ -23,6 +24,7 @@ router.get("/", (req, res, next) => {
           (bookInfo[chapter] = (
             await collection.bibleBook.distinct("verseNumber", query)
           ).length);
+
         return res.status(200).json(bookInfo);
       }
       const query = { overallOrder: { $gt: 0 } };
@@ -39,15 +41,16 @@ router.get("/", (req, res, next) => {
       };
       const cursor = collection.bibleInfo.find(query, options);
       if ((await cursor.count()) === 0) {
-        res.json("No documents found!");
+        return res.json("No documents found!");
       }
       await cursor.forEach((i) => {
         list.push(i);
       });
       return res.status(200).json(list);
-    });
-  } catch (error) {
-    next(error);
-  }
+    } catch (err) {
+      console.log(err);
+    }
+    db.close();
+  });
 });
 module.exports = router;

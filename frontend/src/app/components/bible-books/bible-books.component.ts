@@ -1,14 +1,6 @@
 import {  Component, OnInit } from '@angular/core';
 import { FetchdataService } from '../../service/fetchdata.service';
-
-interface Book {
-  chinese: string;
-  pinyin: string;
-  english: string;
-  overallOrder: string;
-  testament: string;
-  isCollapsed: boolean;
-};
+import {BookDets} from "../../interfaces/Book";
 
 @Component({
   selector: 'app-bible-books',
@@ -17,16 +9,24 @@ interface Book {
 })
 
 export class BibleBooksComponent implements OnInit {
-  public books$: any;
-  isCollapsed: boolean= true;
-
+  public books$?: any;
+  bookDetails?: BookDets;
 
   constructor(private FetchdataService: FetchdataService) {}
-
-  ngOnInit(){
-   this.books$=this.FetchdataService.sendGetRequest('booklist')
-  }
-  public open(event:MouseEvent, book:Book) {
-    book.isCollapsed=!book.isCollapsed;
-  }
+  bookDets = {
+  bookName: "john",
+  chapter:1
 }
+  getDetails(book:string,chapter:number) {
+    this.bookDetails= {
+      bookName:book,
+      chapter:chapter
+    };
+  }
+  ngOnInit(){
+   this.FetchdataService.sendGetRequest('booklist').subscribe(data=>
+    this.books$=data)
+  }
+
+}
+ 

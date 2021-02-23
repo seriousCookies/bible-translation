@@ -1,8 +1,8 @@
-<mat-sidenav-container class="tp-container">
+<mat-sidenav-container class="tp-container" fullscreen>
   <mat-sidenav #sidenav mode="push" [fixedInViewport]="true">
     <h1>Old Testament</h1>
     <mat-accordion>
-    <div class="item" *ngFor="let book of books$ | async" (click)="open($event, book)">
+    <div class="item" *ngFor="let book of books$">
       <div *ngIf="book.testament ==='OldTestament'">
         <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header>
@@ -11,13 +11,14 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <app-book-chapters
+            (selectedChapter)="getDetails(book.english, $event)"
                 [bookName]="book.english"
                 ></app-book-chapters>
           </mat-expansion-panel>
       </div>  
              </div>
       <h1>New Testament</h1>
-      <div class="item" *ngFor="let book of books$| async" (click)="open($event, book)">
+      <div class="item" *ngFor="let book of books$">
         <div *ngIf="book.testament ==='NewTestament'">
           <mat-expansion-panel hideToggle>
               <mat-expansion-panel-header>
@@ -26,6 +27,7 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <app-book-chapters
+              (selectedChapter)="getDetails(book.english, $event)"
                   [bookName]="book.english"
                   ></app-book-chapters>
             </mat-expansion-panel>
@@ -35,5 +37,8 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <button mat-icon-button color="primary" (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
+    {{bookDetails?.bookName}}
+    {{bookDetails?.chapter}}
+  <app-chapter-verses [bookDetails]="bookDetails"></app-chapter-verses>
   </mat-sidenav-content>
 </mat-sidenav-container>

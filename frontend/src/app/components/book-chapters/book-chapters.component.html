@@ -1,5 +1,5 @@
 <div>
-  <button mat-stroked-button *ngFor="let chapter of chapterList">
+  <button mat-stroked-button *ngFor="let chapter of chapterList" (click)="sendChapterUp($event, chapter)">
     {{chapter}}
    </button>
 </div>

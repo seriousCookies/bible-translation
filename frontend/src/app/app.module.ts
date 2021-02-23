@@ -13,11 +13,14 @@ import {MatButtonModule} from '@angular/material/button'
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon';
 import { BookChaptersComponent } from './components/book-chapters/book-chapters.component';
+import { ChapterVersesComponent } from './components/chapter-verses/chapter-verses.component';
+
 @NgModule({
   declarations: [
     AppComponent,
     BibleBooksComponent,
-    BookChaptersComponent
+    BookChaptersComponent,
+    ChapterVersesComponent
   ],
   imports: [
     BrowserModule,

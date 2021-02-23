@@ -9,5 +9,8 @@ import { Component, OnInit } from '@angular/core';
 export class AppComponent{
 
   title = 'Bible-Translation';
-
+  testing= {
+    bookName:"genesis",
+    chapter:1
+  }
 }
