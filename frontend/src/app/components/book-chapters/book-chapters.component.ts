@@ -19,8 +19,7 @@ export class BookChaptersComponent implements OnInit {
    this.FetchdataService.sendGetRequest(`booklist/?book=${book}`).subscribe(data=>{
     this.data$ = Object.values(data)
     this.chapterList= [...Array(this.data$[0]).keys()].map(x => ++x)
-    console.log(this.bookName, this.data$, this.chapterList)
-     
+      
    })
 
    
