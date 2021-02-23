@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component,  EventEmitter, Input, Output, OnInit } from '@angular/core';
+
 import { FetchdataService } from '../../service/fetchdata.service';
 
 
@@ -9,6 +10,10 @@ import { FetchdataService } from '../../service/fetchdata.service';
 })
 export class BookChaptersComponent implements OnInit {
   @Input() bookName?:string;
+  @Output() selectedChapter :EventEmitter<any>= new EventEmitter
+  sendChapterUp(e:any, chapter:number) {
+    this.selectedChapter.emit(chapter)
+  }
   chapterList?: Array<number>;
   data$: any;
   

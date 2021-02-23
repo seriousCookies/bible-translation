@@ -5,3 +5,8 @@ export interface Book {
   overallOrder: string;
   testament: string;
 };
+
+export interface BookDets {
+  bookName?: String,
+  chapter?: Number,
+}
