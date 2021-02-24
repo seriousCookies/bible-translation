@@ -2,43 +2,45 @@
   <mat-sidenav #sidenav mode="push" [fixedInViewport]="true">
     <h1>Old Testament</h1>
     <mat-accordion>
-    <div class="item" *ngFor="let book of books$">
-      <div *ngIf="book.testament ==='OldTestament'">
-        <mat-expansion-panel hideToggle>
+      <div class="item" *ngFor="let book of books$">
+        <div *ngIf="book.testament === 'OldTestament'">
+          <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                {{book.chinese}}-{{book.english}}
+                {{ book.chinese }}-{{ book.english }}
               </mat-panel-title>
             </mat-expansion-panel-header>
             <app-book-chapters
-            (selectedChapter)="getDetails(book.english, $event)"
-                [bookName]="book.english"
-                ></app-book-chapters>
+              (selectedChapter)="getDetails(book.english, $event)"
+              [bookName]="book.english"
+            ></app-book-chapters>
           </mat-expansion-panel>
-      </div>  
-             </div>
+        </div>
+      </div>
       <h1>New Testament</h1>
       <div class="item" *ngFor="let book of books$">
-        <div *ngIf="book.testament ==='NewTestament'">
+        <div *ngIf="book.testament === 'NewTestament'">
           <mat-expansion-panel hideToggle>
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  {{book.chinese}}-{{book.english}}
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <app-book-chapters
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{ book.chinese }}-{{ book.english }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-book-chapters
               (selectedChapter)="getDetails(book.english, $event)"
-                  [bookName]="book.english"
-                  ></app-book-chapters>
-            </mat-expansion-panel>
-        </div>  
+              [bookName]="book.english"
+            ></app-book-chapters>
+          </mat-expansion-panel>
         </div>
-      </mat-accordion>
+      </div>
+    </mat-accordion>
   </mat-sidenav>
   <mat-sidenav-content>
-    <button mat-icon-button color="primary" (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
-    {{bookDetails?.bookName}}
-    {{bookDetails?.chapter}}
-  <app-chapter-verses [bookDetails]="bookDetails"></app-chapter-verses>
+    <button mat-icon-button color="primary" (click)="sidenav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    {{ bookDetails?.bookName }}
+    {{ bookDetails?.chapter }}
+    <app-chapter-verses [bookDetails]="bookDetails"></app-chapter-verses>
   </mat-sidenav-content>
 </mat-sidenav-container>
