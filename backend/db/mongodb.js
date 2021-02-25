@@ -1,6 +1,7 @@
 const MongoClient = require("mongodb").MongoClient;
-const mongo_url = process.env.MONGODB_ATLAS_CONNECTION_STRING;
+const mongo_url = process.env.MONGODB_LOCAL;
 let _db;
+let client;
 const dbName = process.env.DB_NAME;
 
 const connectDB = async (callback) => {
@@ -11,7 +12,8 @@ const connectDB = async (callback) => {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       },
-      (err, client) => {
+      (err, _client) => {
+        client = _client;
         _db = client.db(dbName);
         return callback(err);
       }
@@ -23,6 +25,6 @@ const connectDB = async (callback) => {
 
 const getDB = () => _db;
 
-const disconnectDB = () => _db.close();
+const disconnectDB = () => client.close();
 
 module.exports = { connectDB, getDB, disconnectDB };
