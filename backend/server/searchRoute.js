@@ -19,11 +19,10 @@ router.get("/", (req, res) => {
   verse && (query.verseNumber = verse);
   const rawData = [];
   const collection = {};
-
   MongoDB.connectDB(async (err) => {
-    if (err) console.log(err);
-    const db = MongoDB.getDB();
     try {
+      if (err) console.log(err, "err connecting to DB");
+      const db = MongoDB.getDB();
       switch (translation) {
         case "en":
           collection.english = db.collection("esv-en-bible-chapter");
@@ -54,12 +53,18 @@ router.get("/", (req, res) => {
       const data = await rawData
         .flat()
         .sort((a, b) => a.split(" ")[0] - b.split(" ")[0]);
-      return res.status(200).json(data);
+      const binned = data.reduce((result, word) => {
+        const number = word.match(/\d*/)[0];
+        result[number] = result[number] || [];
+        result[number].push(word.replace(/\d*./, ""));
+        return result;
+      }, {});
+      MongoDB.disconnectDB();
+      return res.status(200).json(binned);
     } catch (error) {
-      console.log(err);
+      console.log(error);
     }
-    db.close();
-    console.log("done");
   });
+  console.log("logging");
 });
 module.exports = router;

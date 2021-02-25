@@ -1,5 +1,20 @@
 <div>
-  <div  *ngFor="let verse of verseList">
-    <ol>{{verse}}</ol>
-   </div>
+  <mat-spinner
+    *ngIf="showSpinner"
+    diameter="40"
+    strokeWidth="2"
+    color="primary"
+  ></mat-spinner>
+  <div *ngIf="!showSpinner">
+    <div *ngFor="let verse of verseList | keyvalue: keepOriginalOrder">
+      <ol>
+        {{
+          verse.key
+        }}
+        {{
+          verse.value
+        }}
+      </ol>
+    </div>
+  </div>
 </div>

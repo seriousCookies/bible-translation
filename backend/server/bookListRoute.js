@@ -41,16 +41,18 @@ router.get("/", (req, res, next) => {
       };
       const cursor = collection.bibleInfo.find(query, options);
       if ((await cursor.count()) === 0) {
+        MongoDB.disconnectDB();
         return res.json("No documents found!");
       }
       await cursor.forEach((i) => {
         list.push(i);
       });
+
+      MongoDB.disconnectDB();
       return res.status(200).json(list);
     } catch (err) {
       console.log(err);
     }
-    db.close();
   });
 });
 module.exports = router;

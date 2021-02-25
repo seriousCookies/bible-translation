@@ -4,9 +4,9 @@ export interface Book {
   english: string;
   overallOrder: string;
   testament: string;
-};
+}
 
 export interface BookDets {
-  bookName?: String,
-  chapter?: Number,
+  bookName?: String;
+  chapter?: Number;
 }
