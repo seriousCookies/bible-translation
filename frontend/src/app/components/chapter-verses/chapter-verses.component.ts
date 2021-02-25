@@ -13,6 +13,11 @@ export class ChapterVersesComponent implements OnChanges {
   verseList?: Array<object>;
   constructor(private FetchdataService: FetchdataService) {}
   showSpinner: Boolean = false;
+
+  addSpace(verse: any, index: number) {
+    return index === 0 ? verse[0] : verse[1];
+  }
+
   loadData() {
     this.showSpinner = true;
     setTimeout(() => (this.showSpinner = false), 500);
@@ -24,11 +29,11 @@ export class ChapterVersesComponent implements OnChanges {
       ?.toLocaleLowerCase()
       .replace(/\s/, '-');
     const chapter = this.bookDetails?.chapter;
-    this.searchString = `search/?book=shipian&chapter=${chapter}&translation=ch`;
+    this.searchString = `search/?book=chuangshiji&chapter=${chapter}&translation=ch`;
     this.bookDetails && this.verseList && this.loadData();
     this.FetchdataService.sendGetRequest(this.searchString).subscribe(
       (data) => {
-        console.log(data, 'here');
+        console.log(Object.values(data)[0], data, 'here now');
         this.verseList = data;
       }
     );

@@ -7,12 +7,17 @@
   ></mat-spinner>
   <div *ngIf="!showSpinner">
     <div *ngFor="let verse of verseList | keyvalue: keepOriginalOrder">
-      <ol>
+      <ul>
         {{
           verse.key
         }}
         {{
-          verse.value
+          addSpace(verse.value, 0)
+        }}
+      </ul>
+      <ol>
+        {{
+          addSpace(verse.value, 1)
         }}
       </ol>
     </div>
