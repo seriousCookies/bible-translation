@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FetchdataService } from '../../service/fetchdata.service';
-import { BookDets } from '../../interfaces/Book';
+import { Book, BookDets } from '../../interfaces/Book';
 
 @Component({
   selector: 'app-chapter-verses',
@@ -11,6 +11,7 @@ export class ChapterVersesComponent implements OnChanges {
   @Input() bookDetails?: BookDets;
   searchString?: Array<string>;
   verseList?: Array<object>;
+  allData?: Array<object>;
   constructor(private FetchdataService: FetchdataService) {}
   showSpinner: Boolean = false;
   searchStringGenerator(
@@ -24,6 +25,7 @@ export class ChapterVersesComponent implements OnChanges {
   }
 
   addSpace(verse: any, index: number) {
+    console.log(verse, 'in Addspace');
     return index === 0 ? verse[0] : verse[1];
   }
 
@@ -45,12 +47,14 @@ export class ChapterVersesComponent implements OnChanges {
       chapter
     );
     this.bookDetails && this.verseList && this.loadData();
+    this.allData = [];
     this.searchString?.map((string) => {
       this.FetchdataService.sendGetRequest(string).subscribe((data) => {
-        console.log(data, 'logging now');
-        return this.verseList?.push(...data);
+        this.allData?.push(data);
+        console.log(this.allData, 'nothing still?');
       });
+      console.log(this.allData, 'done yet?');
     });
-    console.log(this.verseList, this.searchString, 'here now');
+    console.log(this.allData, this.searchString, 'here now');
   }
 }
