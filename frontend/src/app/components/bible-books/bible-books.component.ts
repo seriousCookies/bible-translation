@@ -12,16 +12,20 @@ export class BibleBooksComponent implements OnInit {
   bookDetails?: BookDets;
 
   constructor(private FetchdataService: FetchdataService) {}
+  default = {
+    bookNameEN: 'genesis',
+    bookNameCH: 'chuangshiji',
+    chapter: 1,
+  };
 
-  getDetails(book: string, chapter: number) {
+  getDetails(bookEN: string, bookCH: string, chapter: number) {
     this.bookDetails = {
-      bookName: book,
+      bookNameEN: bookEN,
+      bookNameCH: bookCH,
       chapter: chapter,
     };
   }
   ngOnInit() {
-    this.FetchdataService.sendGetRequest('booklist').subscribe(
-      (data) => (this.books$ = data)
-    );
+    this.FetchdataService.data$.subscribe((data) => (this.books$ = data));
   }
 }
