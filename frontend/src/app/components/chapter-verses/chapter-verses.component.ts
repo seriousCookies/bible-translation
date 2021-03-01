@@ -16,8 +16,8 @@ export class ChapterVersesComponent implements OnChanges {
   constructor(private FetchdataService: FetchdataService) {}
   showSpinner: Boolean = false;
   searchStringGenerator(
-    en: String | undefined,
-    ch: String | undefined,
+    en: string | undefined,
+    ch: string | undefined,
     chapter: Number | undefined
   ) {
     const enString = `search/?book=${en}&chapter=${chapter}&translation=en`;
@@ -47,7 +47,6 @@ export class ChapterVersesComponent implements OnChanges {
   public keepOriginalOrder = (a: any) => a.key;
 
   async ngOnChanges(changes: SimpleChanges) {
-    console.log(this.bookDetails, 'here now');
     const bookNameEN = this.bookDetails?.bookNameEN
       ?.toLocaleLowerCase()
       .replace(/\s/, '-');
@@ -64,7 +63,6 @@ export class ChapterVersesComponent implements OnChanges {
         this.allData?.push(data);
         this.combinedData = this.allData?.reduce((a: any, b: any) => {
           return Object.keys(a).map((key) => {
-            console.log(a[key].length, 'HEre');
             if (a[key].length === 2) {
               return [a[key], b[key]].flat(1);
             } else {

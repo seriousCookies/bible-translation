@@ -39,17 +39,18 @@
     <button mat-icon-button (click)="sidenav.toggle()">
       <mat-icon color="primary">menu</mat-icon>
     </button>
-    <div *ngIf="bookDetails; else showDefault">
-      {{ bookDetails?.bookNameEN }}
-      {{ bookDetails?.chapter }}
-      <app-chapter-verses [bookDetails]="bookDetails"></app-chapter-verses>
-    </div>
-    <ng-template #showDefault>
+    <div>
       <h1 style="text-align: center">
-        {{ bookDetails ? "" : (default.bookNameEN | uppercase) }}
-        {{ default.chapter }}
+        {{
+          bookDetails
+            ? (bookDetails.bookNameEN | uppercase)
+            : (default.bookNameEN | uppercase)
+        }}
+        {{ bookDetails ? bookDetails.chapter : default.chapter }}
       </h1>
-      <app-chapter-verses [bookDetails]="default"></app-chapter-verses>
-    </ng-template>
+      <app-chapter-verses
+        [bookDetails]="bookDetails ? bookDetails : default"
+      ></app-chapter-verses>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
