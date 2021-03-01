@@ -65,6 +65,5 @@ router.get("/", (req, res) => {
       console.log(error);
     }
   });
-  console.log("logging");
 });
 module.exports = router;

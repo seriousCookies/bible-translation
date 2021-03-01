@@ -11,7 +11,7 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <app-book-chapters
-              (selectedChapter)="getDetails(book.english, $event)"
+              (selectedChapter)="getDetails(book.english, book.pinyin, $event)"
               [bookName]="book.english"
             ></app-book-chapters>
           </mat-expansion-panel>
@@ -27,7 +27,7 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <app-book-chapters
-              (selectedChapter)="getDetails(book.english, $event)"
+              (selectedChapter)="getDetails(book.english, book.pinyin, $event)"
               [bookName]="book.english"
             ></app-book-chapters>
           </mat-expansion-panel>
@@ -36,11 +36,21 @@
     </mat-accordion>
   </mat-sidenav>
   <mat-sidenav-content>
-    <button mat-icon-button color="primary" (click)="sidenav.toggle()">
-      <mat-icon>menu</mat-icon>
+    <button mat-icon-button (click)="sidenav.toggle()">
+      <mat-icon color="primary">menu</mat-icon>
     </button>
-    {{ bookDetails?.bookName }}
-    {{ bookDetails?.chapter }}
-    <app-chapter-verses [bookDetails]="bookDetails"></app-chapter-verses>
+    <div>
+      <h1 style="text-align: center">
+        {{
+          bookDetails
+            ? (bookDetails.bookNameEN | uppercase)
+            : (default.bookNameEN | uppercase)
+        }}
+        {{ bookDetails ? bookDetails.chapter : default.chapter }}
+      </h1>
+      <app-chapter-verses
+        [bookDetails]="bookDetails ? bookDetails : default"
+      ></app-chapter-verses>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

@@ -7,6 +7,7 @@ export interface Book {
 }
 
 export interface BookDets {
-  bookName?: String;
+  bookNameEN?: string;
+  bookNameCH?: string;
   chapter?: Number;
 }

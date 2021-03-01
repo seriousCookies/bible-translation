@@ -11,6 +11,7 @@ import { FetchdataService } from './service/fetchdata.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { BookChaptersComponent } from './components/book-chapters/book-chapters.component';
@@ -25,6 +26,7 @@ import { ChapterVersesComponent } from './components/chapter-verses/chapter-vers
   ],
   imports: [
     BrowserModule,
+    MatCardModule,
     MatProgressSpinnerModule,
     HttpClientModule,
     AppRoutingModule,
