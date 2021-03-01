@@ -11,7 +11,7 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <app-book-chapters
-              (selectedChapter)="getDetails(book.english, book.chinese, $event)"
+              (selectedChapter)="getDetails(book.english, book.pinyin, $event)"
               [bookName]="book.english"
             ></app-book-chapters>
           </mat-expansion-panel>
@@ -27,7 +27,7 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <app-book-chapters
-              (selectedChapter)="getDetails(book.english, book.chinese, $event)"
+              (selectedChapter)="getDetails(book.english, book.pinyin, $event)"
               [bookName]="book.english"
             ></app-book-chapters>
           </mat-expansion-panel>
@@ -38,13 +38,18 @@
   <mat-sidenav-content>
     <button mat-icon-button (click)="sidenav.toggle()">
       <mat-icon color="primary">menu</mat-icon>
-      {{ bookDetails ? "" : (default.bookNameEN | uppercase) }}
     </button>
-    <div *ngIf="!bookDetails">
-      <app-chapter-verses [bookDetails]="default"></app-chapter-verses>
+    <div *ngIf="bookDetails; else showDefault">
+      {{ bookDetails?.bookNameEN }}
+      {{ bookDetails?.chapter }}
+      <app-chapter-verses [bookDetails]="bookDetails"></app-chapter-verses>
     </div>
-    {{ bookDetails?.bookNameEN }}
-    {{ bookDetails?.chapter }}
-    <app-chapter-verses [bookDetails]="bookDetails"></app-chapter-verses>
+    <ng-template #showDefault>
+      <h1 style="text-align: center">
+        {{ bookDetails ? "" : (default.bookNameEN | uppercase) }}
+        {{ default.chapter }}
+      </h1>
+      <app-chapter-verses [bookDetails]="default"></app-chapter-verses>
+    </ng-template>
   </mat-sidenav-content>
 </mat-sidenav-container>

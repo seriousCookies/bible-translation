@@ -42,11 +42,12 @@ export class ChapterVersesComponent implements OnChanges {
 
   loadData() {
     this.showSpinner = true;
-    setTimeout(() => (this.showSpinner = false), 500);
+    setTimeout(() => (this.showSpinner = false), 3000);
   }
   public keepOriginalOrder = (a: any) => a.key;
 
   async ngOnChanges(changes: SimpleChanges) {
+    console.log(this.bookDetails, 'here now');
     const bookNameEN = this.bookDetails?.bookNameEN
       ?.toLocaleLowerCase()
       .replace(/\s/, '-');
@@ -59,15 +60,18 @@ export class ChapterVersesComponent implements OnChanges {
     this.bookDetails && this.verseList && this.loadData();
     this.allData = [];
     this.searchString?.map((string) => {
-      this.FetchdataService.sendGetRequest(string).subscribe((data) => {
+      this.FetchdataService.sendGetRequest(string).subscribe(async (data) => {
         this.allData?.push(data);
-        const testing = this.allData?.reduce((a: any, b: any) => {
+        this.combinedData = this.allData?.reduce((a: any, b: any) => {
           return Object.keys(a).map((key) => {
-            return [a[key], b[key]].flat(1);
+            console.log(a[key].length, 'HEre');
+            if (a[key].length === 2) {
+              return [a[key], b[key]].flat(1);
+            } else {
+              return [b[key], a[key]].flat(1);
+            }
           });
         });
-        this.combinedData = testing;
-        console.log(this.combinedData, 'here now');
       });
     });
   }

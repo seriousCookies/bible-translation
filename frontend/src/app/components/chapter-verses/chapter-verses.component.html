@@ -1,28 +1,30 @@
 <div>
+  <mat-card>
+    <mat-card-content>
+      <div *ngIf="!showSpinner">
+        <div *ngIf="allData">
+          <div *ngFor="let verse of combinedData | keyvalue: keepOriginalOrder">
+            <h4 class="custom-no-mb custom-pl">
+              {{ addSpace(verse.value, 0) }}
+            </h4>
+            <h2 class="md-display-3 custom-no-mb">
+              {{ parsedIndex(verse.key) }}.
+              {{ addSpace(verse.value, 1) }}
+            </h2>
+            <p class="custom-color">{{ addSpace(verse.value, 2) }}</p>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button>PREVIOUS</button>
+      <button mat-button>NEXT</button>
+    </mat-card-actions>
+  </mat-card>
   <mat-spinner
     *ngIf="showSpinner"
     diameter="40"
     strokeWidth="2"
     color="primary"
   ></mat-spinner>
-  <div *ngIf="!showSpinner">
-    <div *ngIf="allData">
-      <div *ngFor="let verse of combinedData | keyvalue: keepOriginalOrder">
-        <ol>
-          {{
-            addSpace(verse.value, 0)
-          }}
-        </ol>
-        <ol>
-          {{
-            parsedIndex(verse.key)
-          }}.
-          {{
-            addSpace(verse.value, 1)
-          }}
-        </ol>
-        {{ addSpace(verse.value, 2) }}
-      </div>
-    </div>
-  </div>
 </div>

@@ -25,6 +25,7 @@ export class BibleBooksComponent implements OnInit {
       chapter: chapter,
     };
   }
+
   ngOnInit() {
     this.FetchdataService.data$.subscribe((data) => (this.books$ = data));
   }
