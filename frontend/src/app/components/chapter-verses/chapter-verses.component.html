@@ -6,21 +6,23 @@
     color="primary"
   ></mat-spinner>
   <div *ngIf="!showSpinner">
-    <div *ngFor="let verse of verseList | keyvalue: keepOriginalOrder">
-      {{ verse.key }} Here now space {{ addSpace(verse.value, 2) }}
-      <ol>
-        {{
-          addSpace(verse.value, 0)
-        }}
-      </ol>
-      <ol>
-        {{
-          verse.key
-        }}.
-        {{
-          addSpace(verse.value, 1)
-        }}
-      </ol>
+    <div *ngIf="allData">
+      <div *ngFor="let verse of combinedData | keyvalue: keepOriginalOrder">
+        <ol>
+          {{
+            addSpace(verse.value, 0)
+          }}
+        </ol>
+        <ol>
+          {{
+            parsedIndex(verse.key)
+          }}.
+          {{
+            addSpace(verse.value, 1)
+          }}
+        </ol>
+        {{ addSpace(verse.value, 2) }}
+      </div>
     </div>
   </div>
 </div>

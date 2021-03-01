@@ -12,6 +12,7 @@ export class ChapterVersesComponent implements OnChanges {
   searchString?: Array<string>;
   verseList?: Array<object>;
   allData?: Array<object>;
+  combinedData?: Object;
   constructor(private FetchdataService: FetchdataService) {}
   showSpinner: Boolean = false;
   searchStringGenerator(
@@ -23,10 +24,20 @@ export class ChapterVersesComponent implements OnChanges {
     const chString = `search/?book=${ch}&chapter=${chapter}&translation=ch`;
     return [chString, enString];
   }
+  parsedIndex(index: string) {
+    return parseInt(index) + 1;
+  }
 
   addSpace(verse: any, index: number) {
-    console.log(verse, 'in Addspace');
-    return index === 0 ? verse[0] : verse[1];
+    switch (index) {
+      case 0:
+        return verse[0];
+      case 1:
+        return verse[1];
+      case 2:
+        return verse[2];
+      default:
+    }
   }
 
   loadData() {
@@ -36,7 +47,6 @@ export class ChapterVersesComponent implements OnChanges {
   public keepOriginalOrder = (a: any) => a.key;
 
   async ngOnChanges(changes: SimpleChanges) {
-    this.verseList = [];
     const bookNameEN = this.bookDetails?.bookNameEN
       ?.toLocaleLowerCase()
       .replace(/\s/, '-');
@@ -51,10 +61,14 @@ export class ChapterVersesComponent implements OnChanges {
     this.searchString?.map((string) => {
       this.FetchdataService.sendGetRequest(string).subscribe((data) => {
         this.allData?.push(data);
-        console.log(this.allData, 'nothing still?');
+        const testing = this.allData?.reduce((a: any, b: any) => {
+          return Object.keys(a).map((key) => {
+            return [a[key], b[key]].flat(1);
+          });
+        });
+        this.combinedData = testing;
+        console.log(this.combinedData, 'here now');
       });
-      console.log(this.allData, 'done yet?');
     });
-    console.log(this.allData, this.searchString, 'here now');
   }
 }
