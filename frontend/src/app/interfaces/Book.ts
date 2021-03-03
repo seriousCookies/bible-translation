@@ -9,5 +9,10 @@ export interface Book {
 export interface BookDets {
   bookNameEN?: string;
   bookNameCH?: string;
-  chapter?: Number;
+  chapter?: chapterDets;
+}
+
+export interface chapterDets {
+  chapter: number;
+  chapterLength: number;
 }

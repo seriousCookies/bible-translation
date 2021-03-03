@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 
+import { NgxPaginationModule } from 'ngx-pagination';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,6 +17,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { BookChaptersComponent } from './components/book-chapters/book-chapters.component';
 import { ChapterVersesComponent } from './components/chapter-verses/chapter-verses.component';
+import { PaginatorComponent } from './components/paginator/paginator.component';
 
 @NgModule({
   declarations: [
@@ -23,8 +25,10 @@ import { ChapterVersesComponent } from './components/chapter-verses/chapter-vers
     BibleBooksComponent,
     BookChaptersComponent,
     ChapterVersesComponent,
+    PaginatorComponent,
   ],
   imports: [
+    NgxPaginationModule,
     BrowserModule,
     MatCardModule,
     MatProgressSpinnerModule,

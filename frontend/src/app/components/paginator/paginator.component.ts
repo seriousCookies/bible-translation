@@ -1,5 +1,4 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { FetchdataService } from '../../service/fetchdata.service';
 import { BookDets } from '../../interfaces/Book';
 @Component({
   selector: 'app-paginator',
