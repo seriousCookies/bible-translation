@@ -2,12 +2,12 @@
   <ul>
     <li
       *ngFor="
-        let item of collection | paginate: { itemsPerPage: 10, currentPage: p }
+        let item of collection | paginate: { itemsPerPage: 1, currentPage: p }
       "
     >
-      {{ item }}
+      <app-chapter-verses [bookDetails]="bookDetails"></app-chapter-verses>
     </li>
   </ul>
 
-  <pagination-controls (pageChange)="p = $event"></pagination-controls>
+  <pagination-controls (pageChange)="pageChange($event)"></pagination-controls>
 </div>

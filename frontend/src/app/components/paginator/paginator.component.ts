@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { FetchdataService } from '../../service/fetchdata.service';
 import { BookDets } from '../../interfaces/Book';
 @Component({
@@ -6,13 +6,18 @@ import { BookDets } from '../../interfaces/Book';
   templateUrl: './paginator.component.html',
   styleUrls: ['./paginator.component.scss'],
 })
-export class PaginatorComponent implements OnInit {
+export class PaginatorComponent implements OnChanges {
   @Input() bookDetails?: BookDets;
+  pageChange(e: number) {
+    this.p = e;
+    if (this.bookDetails?.chapter !== undefined)
+      this.bookDetails.chapter.chapter = e;
+  }
 
   collection: number[] = [];
   p: any;
   constructor() {}
-  ngOnInit() {
+  ngOnChanges() {
     console.log(
       this.bookDetails,
       this.bookDetails?.chapter?.chapterLength,

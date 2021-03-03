@@ -50,9 +50,9 @@
           bookDetails ? bookDetails.chapter?.chapter : default.chapter?.chapter
         }}
       </h1>
-      <app-chapter-verses
+      <app-paginator
         [bookDetails]="bookDetails ? bookDetails : default"
-      ></app-chapter-verses>
+      ></app-paginator>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
