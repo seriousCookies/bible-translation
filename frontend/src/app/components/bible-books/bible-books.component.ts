@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FetchdataService } from '../../service/fetchdata.service';
-import { BookDets } from '../../interfaces/Book';
+import { BookDets, chapterDets } from '../../interfaces/Book';
 
 @Component({
   selector: 'app-bible-books',
@@ -12,18 +12,27 @@ export class BibleBooksComponent implements OnInit {
   bookDetails?: BookDets;
 
   constructor(private FetchdataService: FetchdataService) {}
+
   default = {
     bookNameEN: 'genesis',
     bookNameCH: 'chuangshiji',
-    chapter: 1,
+    chapter: {
+      chapter: 1,
+      chapterLength: 50,
+    },
   };
 
-  getDetails(bookEN: string, bookCH: string, chapter: number) {
+  getDetails(bookEN: string, bookCH: string, chapter: chapterDets) {
+    console.log(chapter, 'getDetails, bible Book');
     this.bookDetails = {
       bookNameEN: bookEN,
       bookNameCH: bookCH,
-      chapter: chapter,
+      chapter: {
+        chapter: chapter.chapter,
+        chapterLength: chapter.chapterLength,
+      },
     };
+    console.log(this.bookDetails.chapter, 'bookDetails? bible-books');
   }
 
   ngOnInit() {

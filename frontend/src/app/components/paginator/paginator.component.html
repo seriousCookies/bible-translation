@@ -1,0 +1,13 @@
+<div class="list">
+  <ul>
+    <li
+      *ngFor="
+        let item of collection | paginate: { itemsPerPage: 1, currentPage: p }
+      "
+    >
+      <app-chapter-verses [bookDetails]="bookDetails"></app-chapter-verses>
+    </li>
+  </ul>
+
+  <pagination-controls (pageChange)="pageChange($event)"></pagination-controls>
+</div>

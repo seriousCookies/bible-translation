@@ -54,7 +54,7 @@ export class ChapterVersesComponent implements OnChanges {
     this.searchString = this.searchStringGenerator(
       bookNameEN,
       this.bookDetails?.bookNameCH,
-      chapter
+      chapter?.chapter
     );
     this.bookDetails && this.verseList && this.loadData();
     this.allData = [];

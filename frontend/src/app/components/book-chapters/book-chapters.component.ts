@@ -10,13 +10,20 @@ import { FetchdataService } from '../../service/fetchdata.service';
 export class BookChaptersComponent implements OnInit {
   @Input() bookName?: string;
   @Output() selectedChapter: EventEmitter<any> = new EventEmitter();
-  sendChapterUp(e: any, chapter: number) {
-    this.selectedChapter.emit(chapter);
+  sendChapterUp(e: any, chapter: number, chapterList: Array<number>) {
+    let sendUp = {
+      chapter: chapter,
+      chapterLength: chapterList.length,
+    };
+    console.log(sendUp, 'sendUp book-chapter');
+    this.selectedChapter.emit(sendUp);
   }
-  chapterList?: Array<number>;
+  chapterList: Array<number>;
   data$: any;
 
-  constructor(private FetchdataService: FetchdataService) {}
+  constructor(private FetchdataService: FetchdataService) {
+    this.chapterList = [-1];
+  }
 
   ngOnInit() {
     let book = this.bookName?.toLocaleLowerCase().replace(/\s/, '-');
