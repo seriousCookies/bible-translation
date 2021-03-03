@@ -2,7 +2,7 @@
   <mat-card>
     <mat-card-content>
       <div *ngIf="!showSpinner">
-        <div *ngIf="allData">
+        <div *ngIf="allData" class="center">
           <div *ngFor="let verse of combinedData | keyvalue: keepOriginalOrder">
             <h4 class="custom-no-mb custom-pl">
               {{ addSpace(verse.value, 0) }}

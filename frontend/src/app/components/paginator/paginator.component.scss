@@ -1,0 +1,18 @@
+/* sets font color for pagination to white */
+.pagination::ng-deep .ngx-pagination a {
+  color: white;
+}
+
+/* sets font color for number color when hovering */
+.pagination::ng-deep .ngx-pagination a:hover {
+  background: #c2185b !important;
+}
+/* sets font color for number color when hovering */
+.pagination::ng-deep .ngx-pagination .current {
+  background: #c2185b !important;
+}
+
+/* sets font color for disabled previous or next words */
+.pagination::ng-deep .ngx-pagination .disabled {
+  color: #686868 !important;
+}
