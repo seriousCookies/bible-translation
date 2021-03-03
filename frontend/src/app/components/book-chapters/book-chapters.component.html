@@ -2,7 +2,7 @@
   <button
     mat-stroked-button
     *ngFor="let chapter of chapterList"
-    (click)="sendChapterUp($event, chapter)"
+    (click)="sendChapterUp($event, chapter, chapterList)"
   >
     {{ chapter }}
   </button>
