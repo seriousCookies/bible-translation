@@ -17,11 +17,6 @@ export class PaginatorComponent implements OnChanges {
   p: any;
   constructor() {}
   ngOnChanges() {
-    console.log(
-      this.bookDetails,
-      this.bookDetails?.chapter?.chapterLength,
-      'paginator'
-    );
     this.collection = [
       ...Array(this.bookDetails?.chapter?.chapterLength).keys(),
     ].map((i) => i + 1);

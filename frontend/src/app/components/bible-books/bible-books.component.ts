@@ -23,7 +23,6 @@ export class BibleBooksComponent implements OnInit {
   };
 
   getDetails(bookEN: string, bookCH: string, chapter: chapterDets) {
-    console.log(chapter, 'getDetails, bible Book');
     this.bookDetails = {
       bookNameEN: bookEN,
       bookNameCH: bookCH,
@@ -32,7 +31,6 @@ export class BibleBooksComponent implements OnInit {
         chapterLength: chapter.chapterLength,
       },
     };
-    console.log(this.bookDetails.chapter, 'bookDetails? bible-books');
   }
 
   ngOnInit() {
