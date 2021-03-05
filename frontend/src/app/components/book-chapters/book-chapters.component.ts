@@ -15,7 +15,6 @@ export class BookChaptersComponent implements OnInit {
       chapter: chapter,
       chapterLength: chapterList.length,
     };
-    console.log(sendUp, 'sendUp book-chapter');
     this.selectedChapter.emit(sendUp);
   }
   chapterList: Array<number>;

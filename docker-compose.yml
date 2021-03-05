@@ -1,0 +1,18 @@
+version:'3.7'
+services: 
+  mongo-db: 
+    image:mongo 
+    ports:
+      - '27017:27017'
+  server:
+    build: .
+    image: enchbibletranslation/meanstack_backend
+    ports:
+      - '3000:3000'
+    links:
+      - mongo-db
+  client:
+    build: client
+    image: enchbibletranslation/meanstack_frontend
+    ports:
+      - '80:80'

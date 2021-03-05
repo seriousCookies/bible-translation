@@ -1,4 +1,7 @@
 /* sets font color for pagination to white */
+.pagination {
+  text-align: center;
+}
 .pagination::ng-deep .ngx-pagination a {
   color: white;
 }
