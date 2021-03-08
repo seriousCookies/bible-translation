@@ -8,7 +8,7 @@ import { Book } from '../interfaces/Book';
   providedIn: 'root',
 })
 export class FetchdataService {
-  private REST_API_SERVER = 'http://localhost:3001/api/';
+  private REST_API_SERVER = 'mongodb://mongo-db:27017/api/';
   data$: Observable<Book[]>;
   myData: any;
 

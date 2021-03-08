@@ -14,6 +14,7 @@ const connectDB = async (callback) => {
       },
       (err, _client) => {
         client = _client;
+        console.log(client, "here");
         _db = client.db(dbName);
         return callback(err);
       }
