@@ -1,18 +1,17 @@
-version:'3.7'
-services: 
-  mongo-db: 
-    image:mongo 
+version: "3"
+services:
+  playground-web-frontend:
+    image: playground-web-frontend:latest
+    environment:
+      PORT: 4200
+      PROXY_API: http://playground-web-backend:3001/
     ports:
-      - '27017:27017'
-  server:
-    build: .
-    image: enchbibletranslation/meanstack_backend
+      - 4200:4200
+  playground-web-backend:
+    image: playground-web-backend:latest
+    env_file: .env
+    environment:
+      MONGODB_LOCAL: ${MONGODB_LOCAL}
+      DB_NAME: ${DB_NAME}
     ports:
-      - '3000:3000'
-    links:
-      - mongo-db
-  client:
-    build: client
-    image: enchbibletranslation/meanstack_frontend
-    ports:
-      - '80:80'
+      - 3001:3001
