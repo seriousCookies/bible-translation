@@ -3,7 +3,6 @@ services:
   playground-web-frontend:
     image: playground-web-frontend:latest
     environment:
-      PORT: 4200
       PROXY_API: http://playground-web-backend:3001/
     ports:
       - 4200:4200
@@ -15,3 +14,7 @@ services:
       DB_NAME: ${DB_NAME}
     ports:
       - 3001:3001
+  mongo:
+    image: mongo:latest
+    ports:
+      - 27888:27017
