@@ -14,7 +14,6 @@ const connectDB = async (callback) => {
       },
       (err, _client) => {
         client = _client;
-        console.log(mongo_url, client, "here");
         _db = client.db(dbName);
         return callback(err);
       }

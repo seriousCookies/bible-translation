@@ -9,12 +9,16 @@ services:
   playground-web-backend:
     image: playground-web-backend:latest
     env_file: .env
+    restart: unless-stopped
     environment:
       MONGODB_LOCAL: ${MONGODB_LOCAL}
       DB_NAME: ${DB_NAME}
+    depends_on:
+      - mongo
     ports:
       - 3001:3001
   mongo:
+    container_name: composemongo
     image: mongo:latest
     ports:
       - 27888:27017
