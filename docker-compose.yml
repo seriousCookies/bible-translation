@@ -3,7 +3,7 @@ services:
   playground-web-frontend:
     image: playground-web-frontend:latest
     environment:
-      PROXY_API: http://playground-web-backend:3001/
+      PROXY_API: http://playground-web-backend:8080/
     ports:
       - 4200:4200
   playground-web-backend:
@@ -16,7 +16,7 @@ services:
     depends_on:
       - mongo
     ports:
-      - 3001:3001
+      - 8080:8080
   mongo:
     container_name: composemongo
     image: mongo:latest
