@@ -5,6 +5,6 @@ port = process.env.PORT || 3001;
 
 db.connectDB(() => {
   server.listen(port, () =>
-    console.log(`💖 Server ready at mongodb://localahost:27017/`)
+    console.log(`💖 Server ready at mongodb://localhost:27017/`)
   );
 });
