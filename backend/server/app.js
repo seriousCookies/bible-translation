@@ -1,9 +1,4 @@
 require("dotenv").config();
-const module = require("path");
-app.use(express.static("public"));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/index.html"));
-});
 
 const bodyParser = require("body-parser");
 const searchAPI = require("./searchRoute");
